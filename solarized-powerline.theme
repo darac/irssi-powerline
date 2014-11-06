@@ -353,7 +353,7 @@ abstracts = {
   ### For adv_windowlist.pl script
 
   # Mentioned in adv_windowlist but not default_theme
-  #sb_act_none = "%0%W";
+  sb_act_none = "$*";
 };
 
 formats = {
@@ -361,12 +361,13 @@ formats = {
     daychange = "           %g-----%w-%W-%n Day changed to %%D %W-%w-%g-----%n";
   };
   "Irssi::Script::adv_windowlist" = {
+    awl_display_key = "  %0$N  $H$C$S%n";
     awl_display_key_active = "%k%4 %w$N %k $H$C$S %8%8%n";
-    awl_display_nokey_active = "%k%4 %w$N %k $C %8%8%n";
-    awl_display_nokey = "%0$N  %9$C%9%n ";
-    awl_display_key = "%0$N  $H$C$S%n ";
-    awl_separator = " ";
-    awl_block = "22";
+    awl_display_key_visible = "%k%3 %w$N %k $H$C$S %8%8%n";
+    awl_display_nokey = "  %0$N  %U$C%U%n";
+    awl_display_nokey_active = "%k%4 %w$N %k %U$C%U %8%8%n";
+    awl_display_nokey_visible = "%k%3 %w$N %k %U$C%U %8%8%n";
+    awl_separator = "";
     awl_display_header = "";
   };
 };
