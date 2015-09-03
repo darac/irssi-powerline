@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '0.9b5.1';
+our $VERSION = '0.9b7.1'; # 7e44a9138e39525
 our %IRSSI = (
     authors     => 'Nei',
     contact     => 'Nei @ anti@conference.jabber.teamidiot.de',
@@ -64,6 +64,7 @@ our %IRSSI = (
 #
 # /format awl_name_display <string>
 # * string : Format String for window names
+#     $0 : name as formatted by the settings
 #
 # /format awl_display_header <string>
 # * string : Format String for this header line. The following $'s are expanded:
@@ -138,6 +139,7 @@ our %IRSSI = (
 #   typechecks are supported via ::, e.g. active::Query or active::Irc::Query
 #   undefinedness can be checked with ~, e.g. ~active
 #   string comparison can be done with =, e.g. name=(status)
+#   to make sort case insensitive, use #i, e.g. name#i
 #   any key in the window hash can be tested, e.g. active/chat_type=XMPP
 #   multiple criteria can be separated with , or +, e.g. -data_level+-last_line
 #
@@ -175,8 +177,8 @@ our %IRSSI = (
 # /set awl_custom_xform <perl code>
 # * specify a custom routine to transform window names
 #   example: s/^#// remove the #-mark of IRC channels
-#   the special variables $CHANNEL / $TAG / $QUERY can be tested in
-#   conditionals
+#   the special flags $CHANNEL / $TAG / $QUERY / $NAME can be
+#   tested in conditionals
 #
 # /set awl_last_line_shade <timeout>
 # * set timeout to shade activity base colours, to enable
@@ -208,6 +210,22 @@ our %IRSSI = (
 #     * redraws the windowlist. There may be occasions where the
 #       windowlist can get destroyed so you can use this command to
 #       force a redraw.
+
+# Viewer script
+# =============
+# When run from the command line, adv_windowlist acts as the viewer
+# script to be used together with the irssi script to display the
+# window list in a sidebar/terminal of its own.
+#
+# One optional parameter is accepted, the awl_path
+#
+# The viewer can be configured by two environment variables:
+#
+# AWL_HI9=1
+# * interpret %9 as high-intensity toggle instead of bold
+#
+# AWL_AUTOFOCUS=0
+# * disable auto-focus behaviour when activating a window
 
 # Nei =^.^= ( anti@conference.jabber.teamidiot.de )
 
@@ -587,9 +605,9 @@ sub remove_uniform {
 
 sub remove_uniform_vars {
     my $win = shift;
-    no strict 'refs';
     my $name = __PACKAGE__ . '::custom_xform::' . $win->{active}{type}
 	if $win->{active} && $win->{active}{type};
+    no strict 'refs';
     local ${$name} = 1 if $name;
     remove_uniform(+shift);
 }
@@ -733,7 +751,14 @@ sub _calculate_items {
 	    $name = as_uni($win->get_active_name) // '';
 	    $name = '*' if $S{banned_on} and exists $banned_channels{lc1459($name)};
 	    $name = remove_uniform_vars($win, $name) if $name ne '*';
-	    $name = as_uni($win->{name}) if $name ne '*' and $win->{name} ne '' and $S{prefer_name};
+	    if ($name ne '*' and $win->{name} ne '' and $S{prefer_name}) {
+		$name = as_uni($win->{name});
+		if ($custom_xform) {
+		    no strict 'refs';
+		    local ${ __PACKAGE__ . '::custom_xform::NAME' } = 1;
+		    run_custom_xform() for $name;
+		}
+	    }
 
 	    if (!$VIEWER_MODE && $S{block} >= 0 && $S{hide_name}
 		&& $win->{data_level} < abs $S{hide_name}
@@ -744,8 +769,8 @@ sub _calculate_items {
 	}
 
 	$display = "$display%n";
-	my $num_ent = (' 'x($numPad - length $number)) . $number;
-	my $key_ent = exists $keymap{$number} ? ((' 'x($keyPad - length $keymap{$number})) . $keymap{$number}) : ' 'x$keyPad;
+	my $num_ent = (' 'x max(0,$numPad - length $number)) . $number;
+	my $key_ent = exists $keymap{$number} ? ((' 'x max(0,$keyPad - length $keymap{$number})) . $keymap{$number}) : ' 'x$keyPad;
 	if ($VIEWER_MODE or $S{sbar_maxlen} or $S{block} < 0) {
 	    my $baseLength = sb_length(_format_display(
 		'', $display, $cdisplay, $hilight,
@@ -913,7 +938,7 @@ sub start_viewer {
 	Listen => 1
        );
     unless ($viewer{server}) {
-	$viewer{msg} = $!;
+	$viewer{msg} = "Viewer: $!";
 	$viewer{retry} = Irssi::timeout_add_once(5000, 'retry_viewer', 1);
 	return;
     }
@@ -1095,26 +1120,28 @@ sub reset_awl {
 	    my $undef_check = s/^\W*\K~// ? 1 : undef;
 	    my $equal_check = s/=(.*)\s?$// ? $1 : undef;
 	    s/\s*$//;
+	    my $ignore_case = s/#i$// ? 1 : undef;
 
 	    $print_text_activity = 1 if $_ eq 'last_line';
 
 	    my @path = split '/';
 	    my $class_check = @path && $path[-1] =~ s/(::.*)$// ? $1 : undef;
 
-	    [ $reverse ? -1 : 1, $undef_check, $equal_check, $class_check, @path ]
+	    [ $reverse ? -1 : 1, $undef_check, $equal_check, $class_check, $ignore_case, @path ]
 	} "$S{sort}," =~ /([^+,]*|[^+,]*=[^,]*?\s(?=\+)|[^+,]*=[^,]*)[+,]/g;
 	$window_sort_func = sub {
 	    no warnings qw(numeric uninitialized);
 	    for my $so (@sort_order) {
 		my @x = map {
 		    my $ret = 0;
-		    $ret = $_ eq $so->[2] ? 1 : -1 if defined $so->[2];
+		    $_ = lc1459($_) if defined $_ && !ref $_ && $so->[4];
+		    $ret = $_ eq ($so->[4] ? lc1459($so->[2]) : $so->[2]) ? 1 : -1 if defined $so->[2];
 		    $ret = defined $_ ? ($ret || -3) : 3 if $so->[1];
 		    $ret = ref $_ && $_->isa('Irssi'.$so->[3]) ? 2 : ($ret || -2) if $so->[3];
 		    -$ret || $_
 		}
 		map {
-		    reduce { return unless ref $a; $a->{$b} } $_, @{$so}[4..$#$so]
+		    reduce { return unless ref $a; $a->{$b} } $_, @{$so}[5..$#$so]
 		} $a, $b;
 		return ((($x[0] <=> $x[1] || $x[0] cmp $x[1]) * $so->[0]) || next);
 	    }
@@ -1132,7 +1159,7 @@ sub reset_awl {
 package $script_pkg;
 use strict;
 no warnings;
-our (\$QUERY, \$CHANNEL, \$TAG);
+our (\$QUERY, \$CHANNEL, \$TAG, \$NAME);
 return sub {
 # line 1 @{[ set 'custom_xform' ]}\n$S{xform}\n}};
 	    if ($@) {
@@ -1289,18 +1316,25 @@ sub block_event_window_change {
 sub update_awins {
     {
 	my @wins = Irssi::windows;
-	Irssi::signal_add_first('window changed' => 'block_event_window_change');
 	local $BLOCK_ALL = 1;
+	Irssi::signal_add_first('window changed' => 'block_event_window_change');
 	my $bwin =
 	    my $awin = Irssi::active_win;
-	$awin->command('window last');
-	my $lwin = Irssi::active_win;
-	$lwin->command('window last');
-	my $defer_irssi_broken_last = $lwin->{refnum} == $bwin->{refnum};
+	my $lwin;
+	my $defer_irssi_broken_last;
+	unless ($wins[0]{refnum} == $awin->{refnum}) {
+	    # special case: more than 1 last win, so /win last;
+	    # /win last doesn't come back to the current window. eg. after
+	    # connect & autojoin; we can't handle this situation, bail out
+	    $defer_irssi_broken_last = 1;
+	}
+	else {
+	    $awin->command('window last');
+	    $lwin = Irssi::active_win;
+	    $lwin->command('window last');
+	    $defer_irssi_broken_last = $lwin->{refnum} == $bwin->{refnum};
+	}
 	my $awin_counter = 0;
-	# missing special case: more than 1 last win, so /win last;
-	# /win last doesn't come back to the current window. eg. after
-	# connect & autojoin
 	Irssi::signal_remove('window changed' => 'block_event_window_change');
 	unless ($defer_irssi_broken_last) {
 	    # we need to keep the fe-windows code running here
@@ -1335,8 +1369,13 @@ sub update_awins {
 }
 
 sub resizeTerm {
-    ($screenHeight, $screenWidth) = split ' ', `stty size 2>/dev/null`;
-    $CHANGED{SETUP} = 1;
+    if (defined (my $r = `stty size 2>/dev/null`)) {
+	($screenHeight, $screenWidth) = split ' ', $r;
+	$CHANGED{SETUP} = 1;
+    }
+    else {
+	$CHANGED{SIZE} = 1;
+    }
 }
 
 sub awl_refresh {
@@ -1511,7 +1550,7 @@ UNITCHECK
 
   my $sockpath;
 
-  our $VERSION = '0.5';
+  our $VERSION = '0.6';
 
   our ($got_int, $resized, $timeout);
 
@@ -1700,8 +1739,9 @@ UNITCHECK
 	U => sub { my $n = 'ul'; my $e = ($term_state{$n} ^= 1) ? $n : "exit_$n"; Terminfo->can($e)->() },
 	# italic
 	I => sub { my $n = 'it'; my $e = ($term_state{$n} ^= 1) ? $n : "exit_$n"; Terminfo->can($e)->() },
-	# bold, used as colour modifier
-	9 => sub { $term_state{hicolor} ^= 1; '' },
+	# bold, used as colour modifier if AWL_HI9 is set
+	9 => $ENV{AWL_HI9} ? sub { $term_state{hicolor} ^= 1; '' }
+	    : sub { my $n = 'bold'; my $e = ($term_state{$n} ^= 1) ? $n : "exit_$n"; Terminfo->can($e)->() },
 	#      delete                other stuff
 	(map { $_ => sub { '' } } (split //, ':|>#[')),
 	#      escape
@@ -1753,7 +1793,7 @@ UNITCHECK
 	  my $ss = ' ' x $space;
 	  $str = join $ss, '', (split //, $str), '';
       }
-      my $pad = (abs $vars{block}) - length $str;
+      my $pad = (abs $vars{block}) - length $str; # XXX
       $str = ' ' x ($pad/2) . $str . ' ' x ($pad/2 + $pad%2);
       $str
   }
@@ -1848,10 +1888,14 @@ UNITCHECK
   }
 
   sub handle_resize {
-      ($screenHeight, $screenWidth) = split ' ', safe_qx('stty size');
-      $resized = 0;
-      @screen = ();
-      $disp_update = 1;
+      if (defined (my $r = safe_qx('stty size'))) {
+	  ($screenHeight, $screenWidth) = split ' ', $r;
+	  $resized = 0;
+	  @screen = ();
+	  $disp_update = 1;
+      }
+      else {
+      }
   }
 
   sub _build_keymap {
@@ -1936,6 +1980,8 @@ UNITCHECK
   }
 
   sub main {
+      my $one_shot = @_ && $_[0] eq '-1' && shift;
+      shift if @_ && $_[0] eq '--';
       &init;
       until ($got_int) {
 	  $timeout = undef;
@@ -1953,7 +1999,7 @@ UNITCHECK
 	  }
 	  $timeout ||= RECONNECT_TIME unless $sock;
 	  update_screen() if $disp_update;
-	  while (my @read = $loop->can_read($timeout)) {
+      SELECT: while (my @read = $loop->can_read($timeout)) {
 	      for my $fh (@read) {
 		  if ($fh == \*STDIN) {
 		      if (read STDIN, my $buf, BLOCK_SIZE) {
@@ -1963,7 +2009,7 @@ UNITCHECK
 		      }
 		      else {
 			  $got_int = 1;
-			  last;
+			  last SELECT;
 		      }
 		  }
 		  else {
@@ -1975,6 +2021,10 @@ UNITCHECK
 		      else {
 			  $disp_update = 1;
 			  remove_conn($fh);
+			  if ($one_shot) {
+			      $got_int = 1;
+			      last SELECT;
+			  }
 			  $timeout ||= RECONNECT_TIME;
 		      }
 		  }
@@ -1994,14 +2044,20 @@ UNITCHECK
 
 # Changelog
 # =========
-# 0.9b5
+# 0.9b7.1
 # - fix endless loop in awin detection code!
 # - correct colour swap in awl_viewer
 # - fix passing of alternate socket path to the viewer
 # - potential undefinedness in mouse refnum hinted at by Canopus
 # - fixed regression bug /exec -interactive
+# - add case-insensitive modifier to awl_sort
+# - run custom_xform on awl_prefer_name also
+# - avoid inconsistent active window state after awin detection
+#   reported by ss
+# - revert %9-hack in the viewer prompted by discussion with pierrot
+# - fix new warning in perl 5.22
 #
-# 0.8b9
+# 0.8
 # - replace fifo mode with external viewer script
 # - remove bundled cpan modules
 # - work around bogus irssi warning
