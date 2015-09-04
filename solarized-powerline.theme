@@ -173,7 +173,7 @@ abstracts = {
 
   # public highlighted message in channel
   # $0 = highlight color, $1 = nick mode, $2 = nick
-  pubmsghinick = " %4{msgnick $1 %w$2-}";
+  pubmsghinick = " %4{msgnick $1 %w$2-}%n";
 
   # channel name is printed with message
   # This is printed whenever the channel name is printed for disambiguation, e.g.
