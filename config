@@ -346,7 +346,7 @@ statusbar = {
       placement = "bottom";
       position = "1";
       visible = "inactive";
-	  
+
       items = {
         barstart = { priority = "100"; };
         window = { };
@@ -384,15 +384,22 @@ statusbar = {
 
       items = {
         topicbarstart = { priority = "100"; };
-        topic = { };
-        topic_empty = { };
         topicbarend = { priority = "100"; alignment = "right"; };
+        topic = { };
+        topicempty = { };
       };
     };
     awl_0 = {
       items = {
         barstart = { priority = "100"; };
         awl_0 = { };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+    awl_1 = {
+      items = {
+        barstart = { priority = "100"; };
+        awl_1 = { };
         barend = { priority = "100"; alignment = "right"; };
       };
     };
@@ -422,5 +429,5 @@ settings = {
   };
 };
 keyboard = ( 
-  { key = "meta-[M"; id = "command"; data = "mouse_xterm "; }
+  { key = "meta-[M"; id = "command"; data = "mouse_xterm"; }
 );

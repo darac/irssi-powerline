@@ -71,7 +71,7 @@ abstracts = {
   # text to insert at the beginning of each non-message line
   # %N = terminal default (e.g. white on transparent)
   # %G = brightgreen (Solarized: base01, i.e. darkest gray)
-  line_start = "%N %G";
+  line_start = "%0%W %N";
 
   # timestamp styling, nothing by default
   # %N%8 = reverse normal (to match line_start)
@@ -173,7 +173,7 @@ abstracts = {
 
   # public highlighted message in channel
   # $0 = highlight color, $1 = nick mode, $2 = nick
-  pubmsghinick = " %4{msgnick $1 %w$2-}%n";
+  pubmsghinick = " %4%w%4{msgnick $1 %w$2-}%N%b %n";
 
   # channel name is printed with message
   # This is printed whenever the channel name is printed for disambiguation, e.g.
@@ -182,11 +182,11 @@ abstracts = {
 
   # private message, $0 = nick, $1 = host
   # TODO: To test for Solarized
-  privmsg = "[%m$0%G<%n$1-%G>%n] ";
+  privmsg = " %m$0%G<%n$1-%G>%n ";
 
   # private message from you, $0 = "msg", $1 = target nick
   # TODO: To test for Solarized
-  ownprivmsg = "[%b$0%G<%B$1-%G>%n] ";
+  ownprivmsg = " %b$0%G<%B$1-%G>%n ";
 
   # own private message in query
   ownprivmsgnick = "%3%W{msgnick  $*}%N%y %n";
@@ -244,7 +244,7 @@ abstracts = {
   # TODO: To adapt for Solarized
   ownctcp = "%N%4 %w$0%G %N%b %b$1-%G  ";
   ctcp = "%N%n %g$*%n";
-  ctcp_reply = " $0- ";
+  ctcp_reply = "%N $0- ";
 
   # wallops
   wallop = "%c$*%n: ";
@@ -256,7 +256,7 @@ abstracts = {
   netjoin = "%g$*%n";
 
   # /names list
-  names_prefix = "%N%n";
+  names_prefix = "%0%W%n";
   names_nick = " %G%_$0%_$1-%N  ";
   names_nick_op = " %w%_$0$_$1-%n  ";
   names_nick_halfop = " %Y$_$0$_$1-%n  ";
@@ -276,7 +276,7 @@ abstracts = {
   dccownaction_target = "{action_core $0}%G:%c$1%n ";
 
   # DCC chat, others
-  dccmsg = "[%g$1-%G($0%G)%n] ";
+  dccmsg = " %g$1-%G($0%G)%n ";
   dccquerynick = "%g$*%n";
   dccaction = "%c (*dcc*) $*%n %|";
 
