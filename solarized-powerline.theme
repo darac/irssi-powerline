@@ -71,7 +71,8 @@ abstracts = {
   # text to insert at the beginning of each non-message line
   # %N = terminal default (e.g. white on transparent)
   # %G = brightgreen (Solarized: base01, i.e. darkest gray)
-  line_start = "%0%W %N";
+  #line_start = "%N%W %N";
+  line_start = "%N";
 
   # timestamp styling, nothing by default
   # %N%8 = reverse normal (to match line_start)
@@ -101,7 +102,7 @@ abstracts = {
   comment = " $*";
 
   # reason for something is printed (part, quit, kick, ..)
-  reason = "{comment $*}";
+  reason = "$*";
 
   # mode change is printed ([+o nick])
   mode = "{comment $*}";
@@ -124,7 +125,8 @@ abstracts = {
   # highlighted channel name is printed
   # %c = cyan (Solarized: cyan)
   # %n = return
-  channelhilight = "%c$*%n";
+  channelhilight = "%y$*%N";
+  ichannelhilight = "%3$*%n%8";
 
   # ban/ban exception/invite list mask is printed
   # %R = brightred (Solarized: orange)
@@ -137,7 +139,7 @@ abstracts = {
   ##
 
   # the basic styling of how to print message, $0 = nick mode, $1 = nick
-  msgnick = " $0$1- %|";
+  msgnick = "$0$1- %|";
 
   # message from you is printed. "msgownnick" specifies the styling of the
   # nick ($0 part in msgnick) and "ownmsgnick" specifies the styling of the
@@ -157,18 +159,17 @@ abstracts = {
 
   # $0 = nick mode, $1 = nick
   # %3 = yellow
-  ownmsgnick = "%3%W{msgnick $0$1-}%N%y %n";
+  ownmsgnick = "%3%w{msgnick $0$1-}%N%y %n";
   ownnick = "%k$*";
 
   # public message in channel, $0 = nick mode, $1 = nick
   # %4 = blue
-  pubmsgnick = "%4%W{msgnick $0$1-}%N%b %n";
+  pubmsgnick = "%4%w{msgnick $0$1-}%N%b %n";
   pubnick = "%k$*";
 
   # public message in channel meant for me, $0 = nick mode, $1 = nick
   # %5 = magenta
-  pubmsgmenick = "%5{msgnick $0 $1-}";
-  pubmsgmenick = "%5%W{msgnick $0$1-}%N%m %n";
+  pubmsgmenick = "%5%w{msgnick $0$1-}%N%m %n";
   menick = "%k$*";
 
   # public highlighted message in channel
@@ -189,19 +190,19 @@ abstracts = {
   ownprivmsg = " %b$0%G<%B$1-%G>%n ";
 
   # own private message in query
-  ownprivmsgnick = "%3%W{msgnick  $*}%N%y %n";
+  ownprivmsgnick = "%3%w{msgnick $*}%N%y %n";
   ownprivnick = "%k$*";
 
   # private message in query
   # NOTE: for some reason, we gotta handle both the nick & msg on in this line
-  privmsgnick = "%5%W{msgnick $*}%N%m %n";
+  privmsgnick = "%5%w{msgnick $*}%N%m %n";
 
   ##
   ## Actions (/ME stuff)
   ##
 
   # used internally by this theme
-  action_core = "%N%w%n $*";
+  action_core = "%N%w %n$*";
 
   # generic one that's used by most actions
   action = "{action_core %_$*%n} ";
@@ -230,7 +231,7 @@ abstracts = {
   ##
 
   # whois
-  whois = "%#%n $[8]0 : %Y$1-";
+  whois = "%k%7WHOIS %N%w%#%N $[8]0 : %Y$1-";
 
   # notices
   # TODO: To adapt for Solarized
@@ -241,10 +242,8 @@ abstracts = {
   servernotice = "%3%w %k!$* %k%8%n ";
 
   # CTCPs
-  # TODO: To adapt for Solarized
-  ownctcp = "%N%4 %w$0%G %N%b %b$1-%G  ";
-  ctcp = "%N%n %g$*%n";
-  ctcp_reply = "%N $0- ";
+  ownctcp = "%w%4 %w$0%G %N%b %b$1-%G  ";
+  ctcp = "%N%w%n %g$*%n";
 
   # wallops
   wallop = "%c$*%n: ";
@@ -256,7 +255,7 @@ abstracts = {
   netjoin = "%g$*%n";
 
   # /names list
-  names_prefix = "%0%W%n";
+  names_prefix = "%N%w%n";
   names_nick = " %G%_$0%_$1-%N  ";
   names_nick_op = " %w%_$0$_$1-%n  ";
   names_nick_halfop = " %Y$_$0$_$1-%n  ";
@@ -265,7 +264,7 @@ abstracts = {
   names_channel = " %k$*";
 
   # DCC
-  dcc = "%N%n %g$*%n";
+  dcc = "%N%w%n %g$*%n";
   dccfile = "%_$*%_";
 
   # DCC chat, own msg/action
@@ -356,7 +355,7 @@ abstracts = {
   sb_uc_halfops = "%y%%%n$*";
   sb_uc_voices = "%y+%n$*";
   sb_uc_normal = "$*";
-  #  sb_uc_space = " ";
+  sb_uc_space = "%Y·%n";
 
   ### For adv_windowlist.pl script
 
@@ -366,15 +365,41 @@ abstracts = {
 
 formats = {
   "fe-common/core" = {
-    daychange = "           %g-----%w-%W-%n Day changed to %%D %W-%w-%g-----%n";
+	join              = "%k%7JOIN %8 {ichannelhilight $2} %2 %6$0%7 %N%8%K%0%N {chanhost_hilight $1}";
+	new_topic         = "%k%7TOPIC %8 {ichannelhilight $1} by {nick $0}  $2";
+	nick_changed      = "%k%7RENAME %w%0%n {channick $0}  {channick_hilight $1}%N%8%K%0%N";
+	part              = "%k%7PART %8 {hilight {channel $2}} %2 %6$0%7 %N%8%K%0%N {reason $3}";
+	quit              = "%k%7QUIT %8 %6$0%7 %N%K%0%N {reason $2}";
+    daychange         = "           %g-----%w-%W-%n Day changed to %%D %W-%w-%g-----%n";
+    line_start_irssi  = "%RIRSSI%N%w %N";
+	your_nick_changed = "%k%7RENAME %w%0%n {nick $0}  {hilight {nick $1}}%N%8%K%0%N";
+  };
+  "fe-common/irc" = {
+	away               = "%k%7AWAY %N%w%N";
+	chanmode_change    = "%k%7MODE %N%w%N {channelhilight $0} {mode $1} by {nick $2}";
+	channel_created    = "%w%N Channel {channelhilight $0} created $1";
+	channel_mode       = "%w%N mode/{channelhilight $0} {mode $1}";
+	ctcp_ping_reply    = "%w%4 CTCP {hilight PING} reply %n%b%N {nick $0} %y%N $1.$[-3.0]2 seconds ";
+	topic              = "%w%N Topic for {channelhilight $0}: $1";
+	unaway             = "%k%7AWAY %N%W%N END";
+	usermode_change    = "%w%N Mode change {mode $0} for user {nick $1}";
+	who                = "%w%N %#{channelhilight $[-10]0} %|{nick $[!9]1} $[!3]2 $[!2]3 $4@$5 {comment {hilight $6}}";
+  	ctcp_default_reply = "%W%0%N $0- ";
+    end_of_who         = "%7%kWHO %N%w%N END";
+    end_of_whois       = "%7%kWHOIS %N%w%N END";
+    end_of_whowas      = "%7%kWHOWAS %N%w%N END";
+    no_topic           = "%w%N No topic set for {channelhilight $0}";
+    topic_info         = "%w%N Topic set by {nick $0} {nickhost $2} {comment $1}";
+    whois              = "%7%kWHOIS %w%0%n {nick $0} {nickhost $1@$2}%:{whois ircname $3}";
+    whowas             = "%7%kWHOWAS %N%w%N {nick $0} {nickhost $1@$2}%:{whois was $3}";
   };
   "Irssi::Script::adv_windowlist" = {
     awl_display_key           = "  %0$N  $H$C$S  %n";
     awl_display_key_active    = "%k%4 %w$N %k $H$C$S %8%8%n";
-    awl_display_key_visible   = "%k%3 %w$N %k $H$C$S %8%8%n";
+    awl_display_key_visible   = "%k%3 %m$N %k $H$C$S %8%8%n";
     awl_display_nokey         = "  %0$N  %U$C%U  %n";
     awl_display_nokey_active  = "%k%4 %w$N %k %U$C%U %8%8%n";
-    awl_display_nokey_visible = "%k%3 %w$N %k %U$C%U %8%8%n";
-    awl_display_header = "";
+    awl_display_nokey_visible = "%k%3 %m$N %k %U$C%U %8%8%n";
+    awl_display_header        = "";
   };
 };

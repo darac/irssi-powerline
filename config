@@ -290,7 +290,7 @@ statusbar = {
 
     # treated specially .. window is printed with non-empty windows,
     # window_empty is printed with empty windows
-    window = "{sb $tag/$itemname{sbmode $M}} %C%n ";
+    window = "{sb $tag/$itemname{sbmode $M}}%C%n ";
     window_empty = "{sb {sbservertag $tag}}";
     prompt = "{prompt $[.15]itemname}";
     prompt_empty = "{prompt $winname}";
