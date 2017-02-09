@@ -416,10 +416,11 @@ settings = {
   "perl/core/scripts" = {
     ### For Solarized adv_windowlist.pl script
     awl_block = "-20";
-    awl_sbar_maxlength = "on";
+    awl_sbar_maxlength = "off";
     awl_hide_empty = "yes";
     awl_mouse = "yes";
     awl_viewer = "no";
+    awl_maxlines = "0";
     #fancy_abbrev = "head";
 
     ### For Solarized trackbar.pl script
