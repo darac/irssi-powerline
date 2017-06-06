@@ -285,12 +285,12 @@ statusbar = {
 
     # treated "normally", you could change the time/user name to whatever
     time = "{sb $Z}";
-    user = "%3{sb {sbnickmode $[-2]cumode}%k$N %w {sbumode %K$usermode} %y%0{sbaway $A}}";
+    user = "{imynick {sb {sbnickmode $[-2]cumode}$N}  {sbumode {imode $usermode}} }{sbnickend }";
 
 
     # treated specially .. window is printed with non-empty windows,
     # window_empty is printed with empty windows
-    window = " {sb $tag/{channel $itemname} %C {sbmode $M}} %C%n ";
+    window = " {sb {server $tag}/{channel $itemname} {solf_base1 } {sbmode $M}} {solf_base1 } ";
     window_empty = "{sb {sbservertag $tag}}";
     prompt = "{prompt $[.15]itemname}";
     prompt_empty = "{prompt $winname}";

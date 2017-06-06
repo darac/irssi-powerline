@@ -1,0 +1,456 @@
+# vim: set expandtab:
+# irssi theme for the Solarized color palette with Powerline segments
+# (Adapted from solarized-universal theme by Huy Z: https://github.com/huyz/irssi-colors-solarized)
+#
+# Adaped by:
+#  Paul Saunders https://github.com/darac/irssi-powerline
+
+# default foreground color (%N) - -1 is the "default terminal color"
+default_color = "-1";
+
+# print timestamp/servertag at the end of line, not at beginning
+info_eol = "false";
+
+# these characters are automatically replaced with specified color
+# (dark grey by default)
+replaces = { "[]=" = "%_$*%_"; };
+
+abstracts = {
+  ##
+  ## SOLARIZED COLOURS
+  ##
+  #
+  # Foreground Bases (allowing for continuation)
+  solf_base03_   = "%Z002b36$0-";
+  solf_base02_   = "%Z073642$0-";
+  solf_base01_   = "%Z586e75$0-";
+  solf_base00_   = "%Z657b83$0-";
+  solf_base0_    = "%Z839496$0-";
+  solf_base1_    = "%Z93a1a1$0-";
+  solf_base2_    = "%Zeee8d5$0-";
+  solf_base3_    = "%Zfdf6e3$0-";
+  solf_yellow_   = "%Zb58900$0-";
+  solf_orange_   = "%Zcb4b16$0-";
+  solf_red_      = "%Zdc322f$0-";
+  solf_magenta_  = "%Zd33682$0-";
+  solf_violet_   = "%Z6c71c4$0-";
+  solf_blue_     = "%Z268bd2$0-";
+  solf_cyan_     = "%Z2aa198$0-";
+  solf_green_    = "%Z859900$0-";
+  solf_normal_   = "%N$0-";
+  
+  # Foreground colors (with RETURN code after)
+  solf_base03    = "{solf_base03_ $0-}%n";
+  solf_base02    = "{solf_base02_ $0-}%n";
+  solf_base01    = "{solf_base01_ $0-}%n";
+  solf_base00    = "{solf_base00_ $0-}%n";
+  solf_base0     = "{solf_base0_ $0-}%n";
+  solf_base1     = "{solf_base1_ $0-}%n";
+  solf_base2     = "{solf_base2_ $0-}%n";
+  solf_base3     = "{solf_base3_ $0-}%n";
+  solf_yellow    = "{solf_yellow_ $0-}%n";
+  solf_orange    = "{solf_orange_ $0-}%n";
+  solf_red       = "{solf_red_ $0-}%n";
+  solf_magenta   = "{solf_magenta_ $0-}%n";
+  solf_violet    = "{solf_violet_ $0-}%n";
+  solf_blue      = "{solf_blue_ $0-}%n";
+  solf_cyan      = "{solf_cyan_ $0-}%n";
+  solf_green     = "{solf_green_ $0-}%n";
+  solf_normal    = "{solf_normal_ $0-}%n";
+
+
+  # Background Bases (allowing for continuation)
+  solb_base03_   = "%z002b36$0-";
+  solb_base02_   = "%z073642$0-";
+  solb_base01_   = "%z586e75$0-";
+  solb_base00_   = "%z657b83$0-";
+  solb_base0_    = "%z839496$0-";
+  solb_base1_    = "%z93a1a1$0-";
+  solb_base2_    = "%zeee8d5$0-";
+  solb_base3_    = "%zfdf6e3$0-";
+  solb_yellow_   = "%zb58900$0-";
+  solb_orange_   = "%zcb4b16$0-";
+  solb_red_      = "%zdc322f$0-";
+  solb_magenta_  = "%zd33682$0-";
+  solb_violet_   = "%z6c71c4$0-";
+  solb_blue_     = "%z268bd2$0-";
+  solb_cyan_     = "%z2aa198$0-";
+  solb_green_    = "%z859900$0-";
+  solb_normal_   = "%N$0-";
+  
+  # Foreground colors (with RETURN code after)
+  solb_base03    = "{solb_base03_ $0-}%n";
+  solb_base02    = "{solb_base02_ $0-}%n";
+  solb_base01    = "{solb_base01_ $0-}%n";
+  solb_base00    = "{solb_base00_ $0-}%n";
+  solb_base0     = "{solb_base0_ $0-}%n";
+  solb_base1     = "{solb_base1_ $0-}%n";
+  solb_base2     = "{solb_base2_ $0-}%n";
+  solb_base3     = "{solb_base3_ $0-}%n";
+  solb_yellow    = "{solb_yellow_ $0-}%n";
+  solb_orange    = "{solb_orange_ $0-}%n";
+  solb_red       = "{solb_red_ $0-}%n";
+  solb_magenta   = "{solb_magenta_ $0-}%n";
+  solb_violet    = "{solb_violet_ $0-}%n";
+  solb_blue      = "{solb_blue_ $0-}%n";
+  solb_cyan      = "{solb_cyan_ $0-}%n";
+  solb_green     = "{solb_green_ $0-}%n";
+  solb_normal    = "{solb_normal_ $0-}%n";
+
+
+
+  ##
+  ## generic
+  ##
+
+  # text to insert at the beginning of each non-message line
+  # %N = terminal default (e.g. white on transparent)
+  line_start = "{solb_normal_ {solf_base0_}}";
+
+  # timestamp styling, reverse normal (to match line_start)
+  timestamp = "{solb_base03 {solf_base0 $* }}";
+
+  # any kind of text that needs hilighting, default is to bold
+  hilight = "%_$*%_";
+
+  # any kind of error message, default is bright red
+  # %r = red (Solarized: red)
+  error = "{solf_red $*}";
+
+  # channel name is printed
+  # SOLARIZED: Channels are GREEN
+  channel = "{solf_green $*}";
+  ichannel = "{solb_green {solf_base2 $*}}";
+
+
+  # nick is printed
+  # SOLARIZED: Nicks are BLUE. Own nick is YELLOW
+  nick    = "{solf_blue $nickcolor$*}";
+  inick   = "{solb_blue {solf_base2 $inickcolor$*}}";     # Inverted
+  mynick  = "{solf_yellow $*}";
+  imynick = "{solb_yellow {solf_base2 $*}}";   # Inverted
+
+  # nick host is printed
+  # (that's the "email" address of a user)
+  nickhost = "$*";
+
+  # server name is printed
+  server  = "{solf_cyan $*}";
+  iserver = "{solb_cyan {solf_base2 $*}}";
+
+  # some kind of comment is printed
+  comment = " $*";
+
+  # reason for something is printed (part, quit, kick, ..)
+  reason = "%I$*%I";
+
+  # mode change is printed ([+o nick])
+  # SOLARIZED: Modes are VIOLET
+  mode = "{solf_violet $0-}";
+  imode = "{solf_base02 $0-}";
+
+  ##
+  ## channel specific messages
+  ##
+
+  # highlighted nick/host is printed (joins)
+  # %c = cyan (Solarized: cyan)
+  # %G = brightgreen (Solarized: base01)
+  channick_hilight = "{solf_cyan $*}";
+  chanhost_hilight = "{nickhost $*}";
+
+  # nick/host is printed (parts, quits, etc.)
+  channick = "{solf_cyan $*}";
+  chanhost = "{nickhost $*}";
+
+  # highlighted channel name is printed
+  # SOLARIZED: Channels are GREEN
+  channelhilight  = "{solf_green $*}";
+  ichannelhilight = "{solb_green $*}";
+
+  # ban/ban exception/invite list mask is printed
+  ban = "{solf_orange $*}";
+
+
+  ##
+  ## messages
+  ##
+
+  # the basic styling of how to print message, $0 = nick mode, $1 = nick
+  msgnick = "$0{nick $1-} %|";
+
+  # message from you is printed. "msgownnick" specifies the styling of the
+  # nick ($0 part in msgnick) and "ownmsgnick" specifies the styling of the
+  # whole line.
+  # NOTE: You need a version of IRSSI with the following patch,
+  # otherwise the chevrons won't appear properly
+  # https://github.com/irssi/irssi/commit/2d0a9b4ca30ab09ccf5a84d267a824e2a2059d70>
+  ownmsgnick = "{imynick {solf_base03 }{imode $0}$1 }{mynick } {solf_base01_ $2-}";
+  ownnick = "{solf_base2 $*}";
+
+  # public message in channel, $0 = nick mode, $1 = nick
+  # TODO: This is rather over-complicated because of the fact that nickcolor keeps dropping out.
+  pubmsgnick = "{inick {solf_base03 }}{imode {inick $0}}{inick $1-}{inick  }{nick } ";
+  # Ideally, we'd be able to do this instead.
+  #pubmsgnick = "{inick {solf_base3 }{imode $0}$1- }{nick } ";
+  pubnick = "{solf_base2 $*}";
+
+  # public message in channel meant for me, $0 = nick mode, $1 = nick
+  # %5 = magenta
+  pubmsgmenick = "{solb_magenta {solf_base03 }{imode $0}$1- }{solf_magenta } ";
+  menick = "{solf_base2 $*}";
+
+  # public highlighted message in channel
+  # $0 = highlight color, $1 = nick mode, $2 = nick
+  pubmsghinick = "{inick {solf_base93 }}{imode {inick $1}}{inick $0$2-}{inick  }{nick } ";
+
+  # channel name is printed with message
+  # This is printed whenever the channel name is printed for disambiguation, e.g.
+  # while there is a query in the same window.  Example: <+funnyuser:#test> hello
+  # TODO
+  msgchannel = "%G:%c$*%n";
+
+  # private message, $0 = nick, $1 = host
+  # TODO: To test for Solarized
+  privmsg = " %m$0%G<%n$1-%G>%n ";
+
+  # private message from you, $0 = "msg", $1 = target nick
+  # TODO: To test for Solarized
+  ownprivmsg = " %b$0%G<%B$1-%G>%n ";
+
+  # own private message in query
+  ownprivmsgnick = "{imynick {solf_base03  }{msgnick $* }}{mynick } ";
+  ownprivnick = "{solf_base2 $*}";
+
+  # private message in query
+  privmsgnick = "{solb_magenta {solf_base03  }{solf_base2 $* }}{solf_magenta } ";
+
+  ##
+  ## Actions (/ME stuff)
+  ##
+
+  # used internally by this theme
+  action_core = "{solb_normal {solf_base03 }} $*";
+
+  # generic one that's used by most actions
+  action = "{action_core %_$*%n} ";
+
+  # own action, both private/public
+  ownaction = "{action_core {mynick $0} {solf_base01 $1-}}";
+
+  # own action with target, both private/public
+  # NOTE: to test: /action NICK farted.  (This will tell NICK that you farted)
+  #   This is like a /me but only you and NICK will see
+  ownaction_target = "{action_core $0} $1 ";
+
+  # private action sent by others
+  # %M = brightmagenta (Solarized: violet)
+  pvtaction = "%m (*) $*%n ";
+  pvtaction_query = "{action $*}";
+
+  # public action sent by others
+  pubaction = "{action_core {nick $0} $1-}";
+
+
+  ##
+  ## other IRC events
+  ##
+
+  # whois
+  whois = "{solb_base03 {solf_base0 WHOIS }}{solb_base2 {solf_base03 } {solf_base01 $[9]0 }}{solf_base2  }{solf_base00 $1-}}";
+
+  # notices
+  ownnotice = "{solb_orange {solf_base03 } {solf_base03 NOTICE} }{solb_base2 {solf_orange } {channel $1- }}{solf_base2 }";
+  notice = "{solb_orange {solf_base03 } {solf_base03 $0} }$1- ";
+  pubnotice_channel = "{ichannel {solf_orange } $* }{channel }";
+  pvtnotice_host = "{iserver {solf_orange } {nickhost $* }}{server }";
+  servernotice = "{solb_orange {solf_base03 } {solf_base03 NOTICE} }{solb_base2 {solf_orange } {channel $* }}{solf_base2 }";
+
+  # CTCPs
+  ownctcp = "{solb_cyan {solf_base03 } $0 }{solf_cyan $1-}  ";
+  ctcp = "{solb_normal {solf_base03 }} $*";
+
+  # wallops
+  wallop = "%c$*%n: ";
+  wallop_nick = "%n$*";
+  wallop_action = "%c * $*%n ";
+
+  # netsplits
+  netsplit = "{solf_red $*}";
+  netjoin = "{solf_green $*}";
+
+  # /names list
+  names_prefix = "{solb_base03 {solf_base0 USERS }}{solb_normal {solf_base03 }} ";
+  names_nick = "{solf_base1 %_$0%_$1-}  ";
+  names_nick_op = "{solf_base00 %_$0$_$1-}  ";
+  names_nick_halfop = "{solf_base0 %_$0$_$1-}  ";
+  names_nick_voice = "{solf_base01 $_$0$_$1-}  ";
+  names_users = "{solb_base03 {solf_base0 USERS }}$1";
+  names_channel = "{ichannel {solf_base03 } {solf_base2 $* }}{channel }";
+
+  # DCC
+  dcc = "%N%w%n %g$*%n";
+  dccfile = "%_$*%_";
+
+  # DCC chat, own msg/action
+  dccownmsg = "[%b$0%G($1-%G)%n] ";
+  dccownnick = "%b$*%n";
+  dccownquerynick = "%c$*%n";
+  dccownaction = "{action $*}";
+  dccownaction_target = "{action_core $0}%G:%c$1%n ";
+
+  # DCC chat, others
+  dccmsg = " %g$1-%G($0%G)%n ";
+  dccquerynick = "%g$*%n";
+  dccaction = "%c (*dcc*) $*%n %|";
+
+  ##
+  ## statusbar
+  ##
+
+  # default background for all statusbars. You can also give
+  # the default foreground color for statusbar items.
+  # NOTE: if all the other overriding settings below are set, this only seems to affect
+  #   the content parts of the adv_windowlist.  Default seems to be blue
+  # NOTE: if not set, the default background seems to be %w%4 = white on blue
+  # %4 = blue
+  sb_background = "{solb_base2_ {solf_base01_}}";
+
+  # default backround for "default" statusbar group
+  # NOTE: this impacts the statusbar of an inactive window and the edges of adv_windowlist
+  # %7 = white (wich looks gray on a regular terminal with white bg)
+  sb_default_bg = "{solb_base2_ {solf_base01_}}";
+
+  # background for topicbar at the top (defaults to sb_default_bg)
+  sb_topic_bg = "{solb_base2_ {solf_base01_}}";
+
+  # background for the statusbar of active window. You can also give
+  # the foreground color.
+  # %2 = green
+  sb_window_bg = "{solb_base2_ {solf_base1_}}";
+
+  # background for prompt / input line
+  sb_prompt_bg = "{solb_base3_}";
+  # background for info statusbar
+  # %8 = reverse window
+  # TODO: To test for Solarized
+  sb_info_bg = "";
+
+  # text at the beginning of statusbars. sb-item already puts
+  # space there,so we don't use anything by default.
+  sbstart = "";
+  # text at the end of statusbars. Use space so that it's never
+  # used for anything.
+  sbend = "";
+
+  topicsbstart = "{sbstart $*}";
+  topicsbend = "{sbend $*}";
+
+  prompt = "{ichannel {solf_base3_ $c $*} }{solb_normal_ {channel  }}";
+
+  # This controls each part of a statusbar, including the outer brackets of adv_windowlist
+  sb = "$*";
+  # The mode is next to your NICK and the channel
+  sbmode = "{solf_violet $*}";
+  sbaway = "{solf_cyan }{solb_cyan  zZzZ }{solf_cyan }";
+  sbservertag = " {server $0} {solf_blue (change with ^X)}";
+  sbnickmode = "$0";
+  sbnickend = "{solb_base2 {mynick $*}}";
+
+  # activity in statusbar
+
+  # ',' separator between the window numbers
+  sb_act_sep = "{solf_base0 +}";
+  # normal text
+  # This also affects the color of the window with activity in adv_windowlist
+  sb_act_text = "{solf_base01 $*}";
+  # public message (ordinary messages)
+  # SOLARIZED: This is usually other people speaking, so use "Other People's Nick" colour
+  sb_act_msg = "{nick $*}";
+  # hilight (when people actually chat)
+  # This also affects the color of the window with direct message in adv_windowlist
+  # SOLARIZED: This affects me, so use the "My Nick" colour
+  sb_act_hilight = "{mynick $*}";
+  # hilight with specified color, $0 = color, $1 = text
+  sb_act_hilight_color = "{solf_orange $1-}";
+
+  ### For usercount.pl script
+
+  sb_usercount = "{sb $0 users {solf_base00 (}$1-{solf_base00 )}}";
+  sb_uc_ircops = "{solf_base2 *}$*";
+  sb_uc_ops = "{solf_yellow @}$*";
+  sb_uc_halfops = "{solf_violet %%}$*";
+  sb_uc_voices = "{solf_blue +}$*";
+  sb_uc_normal = " $*";
+  sb_uc_space = "{solf_base3 ·}";
+
+  ### For adv_windowlist.pl script
+
+  # Mentioned in adv_windowlist but not default_theme
+  sb_act_none = "$*";
+};
+
+formats = {
+  "fe-common/core" = {
+    daychange         = "           %g-----%w-%W-%n Day changed to %%D %W-%w-%g-----%n";
+    join              = "{solb_base03 {solf_base0 JOIN }}{solb_base2 {solf_base03 } {channel $2}  {nick $0} }{solb_normal {solf_base2 }} {chanhost_hilight $1}";
+    line_start_irssi  = "{solb_base03 {solf_orange IRSSI }}{solf_base03 } ";
+    new_topic         = "{solb_base03 {solf_base0 TOPIC }}{solb_base2 {solf_base03 } {channel $1} by {nick $0}}{solb_normal {solf_base2 }} $2";
+    nick_changed      = "{solb_base03 {solf_base0 RENAME }}{solb_base2 {solf_base03 } {nick $0}  {nick $1} }{solb_normal {solf_base2 }}";
+    own_msg           = "{ownmsgnick $2 {ownnick $0}}{solf_base01 $1}";
+    part              = "{solb_base03 {solf_base0 PART }}{solf_base2 {solb_base03 } {channel $2}  {nick $0} }{solb_base2 } {reason $3}";
+    query_start       = "QUERY {server }{iserver  $1 }{inick {server } $0 }{nick }";
+    query_stop        = "QUERY {nick }inick  $0 }{nick } END";
+    quit              = "{solb_base03 {solf_base0 QUIT }{solf_base2 }}{solb_base2  {nick $0} {solf_base3 }} {reason $2}";
+    timestamp         = "{timestamp $Z}";
+    your_nick_changed = "{solb_base03 {solf_base0 RENAME }}{solb_base2 {solf_base03 } {mynick $0}  {mynick $1} }{solb_normal {solf_base2 }}";
+  };
+  "fe-common/irc" = {
+    away                   = "{solb_base03 {solf_base0 AWAY }}{solf_base03 }";
+    banlist                = "{solb_base03 {solf_magenta BANS}  $[-3]0 }{solb_base2 {solf_base03 } {channel $1} }{solf_base2 } {ban $2}";
+    banlist_long           = "{solb_base03 {solf_magenta BANS}  $[-3]0 }{solb_base2 {solf_base03 } {channel $1} {comment by {nick $3}}, $4 secs ago}{solf_base2 } {ban $2}";
+    chanmode_change        = "{solb_base03 {solf_base0 MODE }}{solb_base2 {solf_base03 } {channel $0}  {mode $1} by {nick $2} }{solf_base2 }";
+    channel_created        = "{ichannel {solf_base03 } {solf_base2 $0} }{solb_base2 {channel } created $1 }{solf_base2 }";
+    channel_mode           = "{solb_base03 {solf_base0 MODE }}{ichannel {solf_base03 } {solf_base2 $0 }}{solb_base2 {channel } {mode $1 }}{solf_base2 }";
+    ctcp_default_reply     = "{comment $0- }";
+    ctcp_ping_reply        = "{solb_cyan {solf_base03 } {solf_base2 CTCP {hilight PING} reply }}{inick {solf_cyan } $0 }{nick } $1.$[-3.0]2 seconds ";
+    ctcp_reply             = "{solb_cyan {solf_base03 } {solf_base2 CTCP {hilight $0} reply }}{inick {solf_cyan } $1 }{nick } $2";
+    ctcp_reply_channel     = "{solb_cyan {solf_base03 } {solf_base2 CTCP {hilight $0} reply }}{inick {solf_cyan } $1 }{ichannel {nick } $3 }{channel } $2";
+    ctcp_requested         = "{solb_base93 {solf_cyan }}{solb_cyan {solf_base2  CTCP {hilight $2}} {mynick }}{imynick  from $4 {nick }}{inick  by $0 {solf_base2 }}{solb_base2  $1 {solf_base3 }} $3";
+    default_event          = "{solb_normal {solf_base03 }} $1";
+    default_event_server   = "{solb_base03 {solf_base0 $0}}{solf_base03 } $1";
+    ebanlist               = "{solb_base03 {solf_magenta BANS}  exception }{solb_base2 {solf_base03 } {channel $0} }{solf_base2 } {ban $1}";
+    ebanlist_long          = "{solb_base03 {solf_magenta BANS}  exception }{solb_base2 {solf_base03 } {channel $0} {comment by {nick $2}}, $3 secs ago}{solf_base2 } {ban $1}";
+    end_of_who             = "{solb_base03 {solf_base0 WHO }}{solf_base03 } END";
+    end_of_whois           = "{solb_base03 {solf_base0 WHOIS }}{solf_base03 } END";
+    end_of_whowas          = "{solb_base03 {solf_base0 WHOWAS }}{solf_base30 } END";
+    netsplit               = "{solb_base03 {solf_red }}{solb_red {solf_base02 SPLIT }}{solb_base2 {solf_red } {server $0}  {server $1} {solf_normal }} Quits: $2";
+    netsplit_join          = "{solb_red {solf_base03 } SPLIT }{solf_red } Joins: $0";
+    netsplit_join_more     = "{solb_red {solf_base03 } SPLIT }{solf_red } Joins: $0 (+$1 more)";
+    netsplit_more          = "{solb_base03 {solf_red }}{solb_red {solf_base02 SPLIT }}{solb_base2 {solf_red } {server $0}  {server $1} {solf_normal }} Quits: $2 (+$3 more, use /NETSPLIT to show all of them)";
+    no_topic               = "{solf_base03 } No topic set for {channel $0}";
+    notice_private         = "{notice $0 {pvtnotice_host $1}}$2";
+    notice_public          = "{notice $0 {pubnotice_channel $1}}$2";
+    notice_server          = "{servernotice notice $0}$1";
+    own_ctcp               = "{solb_cyan {solf_base03 } {solf_base2 CTCP {hilight $2-}} }{inick {solf_cyan } $0 }{nick }";
+    own_notice             = "{ownnotice notice $0}$1";
+    server_chanmode_change = "{solb_red {solf_base03 } SERVERMODE }{solf_red } {channel $0} {mode $1} by {nick $2}";
+    topic                  = "{solb_base03 {solf_base0 TOPIC }}{solb_base2 {solf_base03 } {channel $0} }{solf_base2 } $1";
+    topic_info             = "{solb_base03 {solf_base0 TOPIC }}{solb_base2 {solf_base03 } {nick $0} {nickhost $2} }{solf_base2 } $1";
+    unaway                 = "{solb_base03 {solf_base0 AWAY }}{solf_base03 } END";
+    usermode_change        = "{solb_base03 {solf_base0 MODE }}{solb_base2 {solf_base03 } {mode $0} }{solf_base2 } for {mynick $1}";
+    who                    = "{solb_base03 {solf_base0 WHO }}{inick {solf_base03 } $[!9]1 }{ichannel {nick } $0 }{solb_base2 {channel } Status: $[!3]2  $[-2]3 hops }{solf_base2 } {nickhost $4@$5} {comment $6}";
+    whois                  = "{solb_base03 {solf_base0 WHOIS }}{inick {solf_base03 } $[!9]0 }{solb_base2 {nick } {nickhost $1@$2} }{solf_base2 } $3";
+    whowas                 = "{solb_base03 {solf_base0 WHOWAS }}{inick {solf_base03 } $[!9]0 }{solb_base2 {nick } {nickhost $1@$2} }{solf_base2 } $3";
+  };
+  "Irssi::Script::adv_windowlist" = {
+    awl_display_header        = "";
+    awl_display_key           = " $N  {solf_base0 $H$C$S} ";
+    awl_display_key_active    = "{solb_base1 {solf_base2 }{solf_base02 $N  $H$S$C }}{solf_base1 }";
+    awl_display_key_visible   = "{solb_base1 {solf_base2 }{solf_base02 {solf_magenta $N}  $H$C$S}}{solf_base1 }";
+    awl_display_nokey         = " $N  {solf_base01 %U$C%U} ";
+    awl_display_nokey_active  = "{solb_blue {solf_base2 }{solf_base02 $N  {solf_base01 %U$C%U}}}{solf base1 }";
+    awl_display_nokey_visible = "{solb_yellow {solf_base1 }{solf_base02 {solf_magenta $N}  %U$C%U}}{solf_base1 ";
+    awl_separator             = "";
+  };
+};
